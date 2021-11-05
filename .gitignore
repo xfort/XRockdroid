@@ -13,3 +13,10 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/.gitignore
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/compiler.xml
+/.idea/gradle.xml
+/.idea/misc.xml
+/.idea/codeStyles/Project.xml
+/.idea/vcs.xml
