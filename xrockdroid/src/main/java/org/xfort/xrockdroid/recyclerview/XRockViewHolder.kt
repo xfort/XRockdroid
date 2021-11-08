@@ -8,7 +8,7 @@ import androidx.viewbinding.ViewBinding
 /**
  ** Created by ZhangHuaXin on 2021/11/5.
  **/
-class XRockViewHolder(vb: ViewBinding) : RecyclerView.ViewHolder(vb.root), View.OnClickListener {
+open class XRockViewHolder(vb: ViewBinding) : RecyclerView.ViewHolder(vb.root), View.OnClickListener {
 
     var onClickListener: XRockViewHolder.OnClickListener? = null
 
