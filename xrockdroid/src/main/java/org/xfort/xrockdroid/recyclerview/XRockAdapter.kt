@@ -13,7 +13,7 @@ import java.util.*
  **/
 abstract class XRockAdapter<Data, VH : XRockViewHolder> : RecyclerView.Adapter<VH>(),
     XRockViewHolder.OnClickListener {
-    val dateList = LinkedList<Data>()
+   open val dataList = LinkedList<Data>()
 
     var onViewHolderClick: XRockViewHolder.OnClickListener? = null
     private var layoutInflater: LayoutInflater? = null
@@ -25,24 +25,24 @@ abstract class XRockAdapter<Data, VH : XRockViewHolder> : RecyclerView.Adapter<V
     fun setData(data: List<Data>?, append: Boolean) {
         if (append) {
             if (!data.isNullOrEmpty()) {
-                var count = dateList.size
-                dateList.addAll(data)
+                var count = dataList.size
+                dataList.addAll(data)
                 notifyItemRangeInserted(count, data.size)
             }
         } else {
-            var count = dateList.size
-            dateList.clear()
+            var count = dataList.size
+            dataList.clear()
             if (data.isNullOrEmpty()) {
                 notifyItemRangeRemoved(0, count)
             } else {
-                dateList.addAll(data)
+                dataList.addAll(data)
                 notifyDataSetChanged()
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return dateList.size
+        return dataList.size
     }
 
     abstract fun onCreateViewHolder(

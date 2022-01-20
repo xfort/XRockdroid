@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LoadingDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0</item>
+        <item name="android:windowBackground">@drawable/bg_dialog_translucent</item>
+        <item name="android:windowFrame">@null</item>
+    </style>
+</resources>

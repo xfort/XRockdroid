@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.ResultReceiver
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
@@ -12,7 +13,6 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import org.xfort.xrockmedia.MusicControllerCallback
 
 /**
  ** Created by ZhangHuaXin on 2021/7/16.
@@ -70,13 +70,17 @@ class MusicServiceConnection(val context: Context, serviceComponent: ComponentNa
     fun sendCommand(
         command: String, parameters: Bundle?, resultCallback: ((Int, Bundle?) -> Unit)
     ) = if (mediaBrow.isConnected) {
-        mediaController.sendCommand(command, parameters, object : ResultReceiver(Handler()) {
-            override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-                resultCallback(resultCode, resultData)
-            }
-        })
+        mediaController.sendCommand(
+            command,
+            parameters,
+            object : ResultReceiver(Handler(Looper.getMainLooper())) {
+                override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
+                    resultCallback(resultCode, resultData)
+                }
+            })
         true
     } else {
+        mediaBrow.connect()
         false
     }
 
@@ -87,12 +91,18 @@ class MusicServiceConnection(val context: Context, serviceComponent: ComponentNa
             extras.putCharSequence(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, subTitle)
             extras.putCharSequence(METADATA_KEY_MIME_TYPE, mimeType)
             playMediaFromUri(uri, extras)
+        } else {
+            mediaBrow.connect()
         }
     }
 
     fun playMediaFromUri(uri: Uri, extras: Bundle) {
-        if (mediaBrow.isConnected) {
-            mediaController.transportControls.playFromUri(uri, extras)
+        if (mediaBrow.isConnected) { //mediaBrow.search("play",extras,{})
+            if (uri != Uri.EMPTY) {
+                mediaController.transportControls.playFromUri(uri, extras)
+            }
+        } else {
+            mediaBrow.connect()
         }
     }
 
@@ -116,9 +126,7 @@ class MusicServiceConnection(val context: Context, serviceComponent: ComponentNa
             return
         }
         val currentState = mediaController.playbackState.state
-        if (currentState == PlaybackStateCompat.STATE_BUFFERING
-            || currentState == PlaybackStateCompat.STATE_PLAYING
-            || currentState == PlaybackStateCompat.STATE_PAUSED ) {
+        if (currentState == PlaybackStateCompat.STATE_BUFFERING || currentState == PlaybackStateCompat.STATE_PLAYING || currentState == PlaybackStateCompat.STATE_PAUSED) {
             mediaController.transportControls.seekTo(position)
         }
     }

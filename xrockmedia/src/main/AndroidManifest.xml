@@ -4,7 +4,7 @@
 
     <application>
 
-        <service android:name=".XMediaPlayService">
+        <service android:name=".XMediaPlayService" android:exported="false">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>

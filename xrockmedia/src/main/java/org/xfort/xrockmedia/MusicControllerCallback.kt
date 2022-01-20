@@ -18,19 +18,22 @@ import androidx.lifecycle.MutableLiveData
  **/
 class MusicControllerCallback(
     val callback: MediaBrowserCompat.ConnectionCallback,
-    val playstate: MutableLiveData<PlaybackStateCompat>,
-    val position: MutableLiveData<Long>
+    val playstateCallback: MutableLiveData<PlaybackStateCompat>,
+    val positionCallback: MutableLiveData<Long>
 ) : MediaControllerCompat.Callback() {
     val TAG = javaClass.name
 
-    var playState =
-        PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_NONE, 0, 0f).build()
+    var playState: PlaybackStateCompat? = null
+
+    //PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_NONE, 0, 0f).build()
     var handler: Handler? = null
 
     var playingDuration = 0L
+
     override fun onSessionReady() {
         super.onSessionReady()
         handler = Handler(Looper.getMainLooper())
+        updateProgress()
     }
 
     override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
@@ -38,18 +41,16 @@ class MusicControllerCallback(
         playState =
             state ?: PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
                 .build()
-        playstate.postValue(state)
-        Log.d(TAG, "onPlaybackStateChanged()_" + state?.toString())
-        updateProgress()
+        playstateCallback.postValue(state)
     }
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
         super.onMetadataChanged(metadata) //metadata?.bundle?.putLong()
         playingDuration = metadata?.getLong(METADATA_KEY_DURATION) ?: 0
-        Log.d(TAG, "onMetadataChanged()_")
+        Log.d(TAG, "onMetadataChanged()_$playingDuration")
         val state = PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, 0, 0f)
             .setExtras(metadata?.bundle).build()
-        playstate.postValue(state)
+        playstateCallback.postValue(state)
     }
 
     override fun onAudioInfoChanged(info: MediaControllerCompat.PlaybackInfo?) {
@@ -86,15 +87,18 @@ class MusicControllerCallback(
     }
 
     fun updateProgress() {
-        position.postValue(getCurrentPlayPosition())
+        positionCallback.postValue(getCurrentPlayPosition())
         handler?.postDelayed({ updateProgress() }, 1000)
     }
 
     fun getCurrentPlayPosition(): Long {
-        if (playState != null && (playState.state == PlaybackStateCompat.STATE_PLAYING || playState.state == PlaybackStateCompat.STATE_BUFFERING)) {
-            val timeDelta = SystemClock.elapsedRealtime() - playState.lastPositionUpdateTime
-            return (playState.position + (timeDelta * playState.playbackSpeed)).toLong()
+        if (playState == null) {
+            return 0L
         }
-        return playState.position
+        if (playState != null && (playState!!.state == PlaybackStateCompat.STATE_PLAYING || playState!!.state == PlaybackStateCompat.STATE_BUFFERING)) {
+            val timeDelta = SystemClock.elapsedRealtime() - playState!!.lastPositionUpdateTime
+            return (playState!!.position + (timeDelta * playState!!.playbackSpeed)).toLong()
+        }
+        return playState!!.position
     }
 }

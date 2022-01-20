@@ -28,12 +28,12 @@ class XMusicNotification(
 
         notificationManager = PlayerNotificationManager.Builder(
             context, NOW_PLAYING_NOTIFICATION_ID, NOW_PLAYING_CHANNEL_ID
-        ).setChannelDescriptionResourceId(R.string.notification_channel_description)
+        ).setChannelNameResourceId(R.string.notification_channel)
+            .setChannelDescriptionResourceId(R.string.notification_channel_description)
             .setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
             .setNotificationListener(notificationListener).build().apply {
                 setMediaSessionToken(sessionToken)
                 setSmallIcon(R.drawable.ic_notification) // Don't display the rewind or fast-forward buttons.
-
                 //setControlDispatcher(DefaultControlDispatcher(0, 0))
             }
     }

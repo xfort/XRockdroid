@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <declare-styleable name="TextValueView">
+        <attr name="value_padding" format="dimension|reference" />
+        <attr name="value_text_size" format="dimension|reference" />
+        <attr name="value_text" format="string|reference" />
+        <attr name="value_text_color" format="color|reference" />
+        <attr name="line_stroke_width" format="dimension|reference" />
+        <attr name="line_color" format="color|reference" />
+        <attr name="line_padding" format="dimension|reference" />
+    </declare-styleable>
+
+
+</resources>

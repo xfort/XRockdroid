@@ -53,13 +53,16 @@ class XMediaPlayService : MediaBrowserServiceCompat() {
 
 
     private val musicPlayer: ExoPlayer by lazy {
-        SimpleExoPlayer.Builder(this).build().apply {
+        ExoPlayer.Builder(this).build().apply {
             setAudioAttributes(uAmpAudioAttributes, true)
             playWhenReady = true
-
             setHandleAudioBecomingNoisy(true)
-
         }
+        //SimpleExoPlayer.Builder(this).build().apply {
+        //    setAudioAttributes(uAmpAudioAttributes, true)
+        //    playWhenReady = true
+        //    setHandleAudioBecomingNoisy(true)
+        //}
     }
 
     private val uAmpAudioAttributes =
@@ -182,6 +185,7 @@ class XMediaPlayService : MediaBrowserServiceCompat() {
 
         //result.detach()
     }
+
 
 
     inner class PlayerNotificationListener : PlayerNotificationManager.NotificationListener {

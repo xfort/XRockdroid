@@ -10,3 +10,4 @@ rootProject.name = "XRockdroid"
 include ':app'
 include ':xrockdroid'
 include ':xrockmedia'
+include ':example'

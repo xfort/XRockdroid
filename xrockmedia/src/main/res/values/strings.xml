@@ -15,8 +15,8 @@
 -->
 <resources>
     <!-- Notificaiton Channel -->
-    <string name="notification_channel">x_media_music</string>
-    <string name="notification_channel_description">x_media_music_des</string>
+    <string name="notification_channel">xrockmedia_music</string>
+    <string name="notification_channel_description">xrockmedia_music_des</string>
 
     <!-- Notification actions -->
     <string name="notification_skip_to_previous">Skip to previous track</string>

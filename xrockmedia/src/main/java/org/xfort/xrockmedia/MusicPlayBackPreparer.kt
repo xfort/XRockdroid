@@ -58,11 +58,12 @@ class MusicPlayBackPreparer(val player: ExoPlayer) : MediaSessionConnector.Playb
     override fun onPrepareFromUri(
         uri: Uri, playWhenReady: Boolean, extras: Bundle?
     ) {
-        Log.d(TAG, "onPrepareFromUri()")
+        Log.d(TAG, "onPrepareFromUri() ")
         currentMediaMetadataCompat = null
 
+        val argMediaId=extras?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)?:uri.toString()
         val metaData = MediaMetadataCompat.Builder().apply {
-            mediaID = uri.toString()
+            mediaID = argMediaId
             mediaUri = uri.toString()
         }
 
@@ -76,7 +77,7 @@ class MusicPlayBackPreparer(val player: ExoPlayer) : MediaSessionConnector.Playb
             currentMediaMetadataCompat = metaData.build()
         }
 
-        val mediaItem = MediaItem.Builder().setUri(uri).setMediaId(uri.toString()).build()
+        val mediaItem = MediaItem.Builder().setUri(uri).setMediaId(argMediaId).build()
 
         player.stop()
         player.clearMediaItems()
